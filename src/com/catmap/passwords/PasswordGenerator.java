@@ -7,33 +7,22 @@ public class PasswordGenerator {
     String generatePassword(int length, boolean useLowerCase, boolean useUpperCase,
                             boolean useNumbers, boolean useSpecialChars) {
 
-        String lowercase = "abcdefghijkmlnopqrstuvwxyz";
-        String upperCase = "ABCDEFGHIJKLMNOPQRSTUWVYZ";
-        String digits = "0123456789";
-        String symbols = "!@#$%^&*()_-[]{}";
+        final String LOWERCASE = "abcdefghijkmlnopqrstuvwxyz";
+        final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUWVYZ";
+        final String DIGITS = "0123456789";
+        final String SYMBOLS = "!@#$%^&*()_-[]{}";
 
         Random rand = new Random();
         StringBuilder charOptions = new StringBuilder();
 
-        if (useLowerCase) {
-            charOptions.append(lowercase);
-        }
+        // Build the character pool based on user preferences
+        if (useLowerCase) charOptions.append(LOWERCASE);
+        if (useUpperCase) charOptions.append(UPPERCASE);
+        if (useNumbers) charOptions.append(DIGITS);
+        if (useSpecialChars) charOptions.append(SYMBOLS);
 
-        if (useUpperCase) {
-            charOptions.append(upperCase);
-        }
-
-        if (useNumbers) {
-            charOptions.append(digits);
-        }
-
-        if (useSpecialChars) {
-            charOptions.append(symbols);
-        }
 
         String allChars = charOptions.toString();
-
-        boolean passwordIsValid = false;
 
         while (true) {
 
@@ -42,36 +31,17 @@ public class PasswordGenerator {
                 char nextLetter = allChars.charAt(rand.nextInt(allChars.length()));
                 password.append(nextLetter);
             }
-            String pass = password.toString();
+            String generatedPassword = password.toString();
 
-            passwordIsValid = true;
+            // Validate the password against the user’s specifications
+            boolean isValid = true;
+            if (useLowerCase && !hasCharOf(LOWERCASE, generatedPassword)) isValid = false;
+            if (useUpperCase && !hasCharOf(UPPERCASE, generatedPassword)) isValid = false;
+            if (useNumbers && !hasCharOf(DIGITS, generatedPassword)) isValid = false;
+            if (useSpecialChars && !hasCharOf(SYMBOLS, generatedPassword)) isValid = false;
 
-            if(useLowerCase && !hasOverlap(pass, lowercase)){
-                passwordIsValid = false;
-            }
-
-            if(useUpperCase && !hasOverlap(pass, upperCase)){
-                passwordIsValid = false;
-            }
-
-            if(useSpecialChars && !hasOverlap(pass, symbols)){
-                passwordIsValid = false;
-            }
-
-            if(useNumbers && !hasOverlap(pass, digits)){
-                passwordIsValid = false;
-            }
-
-            if(useLowerCase && !hasOverlap(pass, lowercase)){
-                passwordIsValid = false;
-            }
-            if(passwordIsValid){
-                return pass;
-            }
-
-            System.out.println("Password failed, pass: " + pass);
-        }
-    }
+            if (isValid) return generatedPassword; // Return the password if valid
+    }}
 
     private boolean hasOverlap(String s1, String s2){
         for(char c : s1.toCharArray()){
@@ -81,4 +51,15 @@ public class PasswordGenerator {
         }
         return false;
     }
+
+    // Check if a string contains at least one character from a given set
+    private boolean hasCharOf(String charSet, String password) {
+        for (char c : charSet.toCharArray()) {
+            if (password.indexOf(c) >= 0) { // Check if the password contains the character
+                return true;
+            }
+        }
+        return false;
+    }
 }
+

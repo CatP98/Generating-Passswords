@@ -7,11 +7,11 @@ public class App {
         int length = ui.getPasswordLength();
         boolean useLowerCase = ui.useLowerCase();
         boolean useUpperCase = ui.useUpperCase();
-        boolean useNumers = ui.useNumbers();
+        boolean useNumbers = ui.useNumbers();
         boolean useSymbols = ui.useSymbols();
 
         PasswordGenerator gen = new PasswordGenerator();
-        String password = gen.generatePassword(length, useLowerCase, useUpperCase, useNumers, useSymbols);
+        String password = gen.generatePassword(length, useLowerCase, useUpperCase, useNumbers, useSymbols);
         ui.displayPassword(password);
     }
 }
